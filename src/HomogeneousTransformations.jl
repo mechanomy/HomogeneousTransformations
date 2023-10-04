@@ -1,14 +1,14 @@
 
 
 """
-HomogeneousTransformations provides basic functions for creating and using [homogeneous transformation matrices]() to perform 3D translations and rotations.
+HomogeneousTransformations.jl provides basic functions for creating and using [homogeneous transformation matrices]() to perform 3D translations and rotations.
 
 
 ## Exports:
 ($EXPORTS)
 
 ## References:
-* 2006_Spong_RobotModelingAndControl
+* [2006_Spong_RobotModelingAndControl](https://www.google.com/books/edition/Robot_Modeling_and_Control/DdjNDwAAQBAJ?hl=en&gbpv=1&dq=robot%20modeling%20and%20control%20homogeneous&pg=PA62&printsec=frontcover)
 
 """
 module HomogeneousTransformations
