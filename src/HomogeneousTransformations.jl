@@ -1,15 +1,4 @@
-
-
-"""
-HomogeneousTransformations.jl provides basic functions for creating and using homogeneous transformation matrices to perform 3D translations and rotations.
-
-## Exports:
-$EXPORTS
-
-## References:
-* [2006_Spong_RobotModelingAndControl](https://www.google.com/books/edition/Robot_Modeling_and_Control/DdjNDwAAQBAJ?hl=en&gbpv=1&dq=robot%20modeling%20and%20control%20homogeneous&pg=PA62&printsec=frontcover)
-
-"""
+#TestItemRunner fails to find tests if the module is documented, https://github.com/julia-vscode/TestItemRunner.jl/issues/33 , moving this to index.md
 module HomogeneousTransformations
   using DocStringExtensions
   using LinearAlgebra
