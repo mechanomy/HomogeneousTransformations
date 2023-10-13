@@ -1,10 +1,13 @@
-name = "HomogeneousTransformations Documentation"
+name = "HomogeneousTransformationsDocs"
 authors = ["Ben Conrad <ben@benconrad.net>"]
 
 [deps]
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+TestItems = "1c621080-faea-4a02-84b6-bbd5e436b8fe"
 
 [compat]
 Documenter = "~0.27"

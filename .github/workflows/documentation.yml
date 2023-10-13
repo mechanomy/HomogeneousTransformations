@@ -22,7 +22,6 @@ jobs:
 
       - name: Clone this repo
         uses: actions/checkout@v2 
-        with:
 
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'

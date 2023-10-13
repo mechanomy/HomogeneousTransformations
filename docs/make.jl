@@ -1,6 +1,9 @@
+# 231012: running via: /w/sync/mechgits/julia/HomogeneousTransformations.jl_public/docs (testItemRunner)$ julia --project make.jl 
 using Documenter
 using DocumenterTools
 using DocStringExtensions
+push!(LOAD_PATH, "../src/")
+# display(LOAD_PATH)
 using HomogeneousTransformations
 
 makedocs(
@@ -17,11 +20,11 @@ makedocs(
   )
 
 # compile custom theme scss in to css, copying over the default themes
-DocumenterTools.Themes.compile("docs/src/assets/themes/documenter-mechanomy.scss", "docs/build/assets/themes/documenter-dark.css")
-DocumenterTools.Themes.compile("docs/src/assets/themes/documenter-mechanomy.scss", "docs/build/assets/themes/documenter-light.css")
+DocumenterTools.Themes.compile("src/assets/themes/documenter-mechanomy.scss", "build/assets/themes/documenter-dark.css")
+DocumenterTools.Themes.compile("src/assets/themes/documenter-mechanomy.scss", "build/assets/themes/documenter-light.css")
 
 deploydocs(
-  root = joinpath(dirname(pathof(BeltTransmission)), "..", "docs"),
+  root = joinpath(dirname(pathof(HomogeneousTransformations)), "..", "docs"),
   target = "build",
   dirname = "",
   repo = "github.com/mechanomy/HomogeneousTransformations.jl.git",
