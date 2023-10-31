@@ -125,11 +125,98 @@ Base.isapprox(a::MMatrix, b::HMatrix; atol::Real=0, rtol::Real=atol) = isapprox(
 end
 
 Base.iterate(hm::HMatrix, state=1) = state > length(hm) ? nothing : (hm.data[state],state+1)
-@testitem "scalar addition" begin 
+@testitem "broadcasting" begin 
   using StaticArrays
   hf = HMatrix( MMatrix{4,4}([1.0 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]) )
-  @test_throws MethodError hf + 1 #need the broadcast .+
+  @test_throws MethodError hf + 1 
   a = hf .+ 1
   @test a[1,1] ≈ 2
+
+  b = hf .* 2
+  @test b[1,1] ≈ 2
+
+  c = hf ./ 2
+  @test c[1,1] ≈ 1/2
 end
+
+Base.:*(a::HMatrix, b::HMatrix) = HMatrix( a.data * b.data )
+@testitem "multiplication" begin
+  a = 0.1
+  b = 0.2
+  H = Rx(a) * Ry(b)
+  @test H[1,1] ≈ cos(b)
+  @test H[2,2] ≈ cos(a)
+  @test H[3,3] ≈ cos(a)*cos(b)
+end
+Base.:*(a::HMatrix, b::MMatrix) = HMatrix( a.data * b )
+Base.:*(a::MMatrix, b::HMatrix) = HMatrix( a * b.data )
+
+Base.:/(a::HMatrix, b::HMatrix) = HMatrix( a.data / b.data)
+@testitem "division" begin
+  a = 0.1
+  b = 0.2
+  H = Rx(a) / Ry(b)
+  @test H[2,2] ≈ cos(a)
+  @test H[3,3] ≈ cos(a)*cos(b)
+end
+Base.:/(a::HMatrix, b::MMatrix) = HMatrix( a.data / b)
+Base.:/(a::MMatrix, b::HMatrix) = HMatrix( a / b.data)
+
+# Base.:+(a::HMatrix, b::HMatrix) = HMatrix( a.data + b.data) #homogeneous transformation matrices are not additive...
+# @testitem "addition" begin
+#   a = 0.1
+#   b = 0.2
+#   H = Rx(a) + Ry(b)
+#   @test H[3,3] ≈ cos(a)+cos(b)
+# end
+
+function Base.show(io::IO, h::HMatrix)
+  # print(io, h.data)
+  # for i in 1:4
+  #   for j in 1:4
+  #     if i < 4 && j < 4
+  #       printstyled(io, @sprintf("%0.3f ", h.data[i,j]), color=:cyan) # rotation
+  #     elseif i < 4 && j == 4
+  #       printstyled(io, @sprintf("%3.3f;\n", h.data[i,j]), color=:blue) # position
+  #     else 
+  #       printstyled(io, @sprintf("%3.3f ", h.data[i,j]), color=:normal) #0001
+  #     end
+  #   end
+  # end
+  # println(io)
+
+  #too cute?
+  for irow = 1:4
+    for icol = 1:4
+      if irow < 4 && icol == 1
+        printstyled(io, @sprintf("%0.3f ", h.data[irow,icol]), color=:light_red) # rx
+      end
+      if irow < 4 && icol == 2
+        printstyled(io, @sprintf("%0.3f ", h.data[irow,icol]), color=:light_green) # ry
+      end
+      if irow < 4 && icol == 3
+        printstyled(io, @sprintf("%0.3f ", h.data[irow,icol]), color=:light_blue) # ry
+      end
+      if irow < 4 && icol == 4
+        printstyled(io, @sprintf("%0.3f;\n", h.data[irow,icol]), color=:yellow) # position
+      end
+      if irow == 4 
+        printstyled(io, @sprintf("%0.3f ", h.data[irow,icol]), color=:normal) # 0001
+      end
+    end
+  end
+  println(io)
+end
+@testitem "printing" begin
+  a = 0.1
+  b = 0.2
+  H = Rx(a) / Ry(b)
+  # @show H
+  # display(H)
+  @test true # too hard to test whether the display is correct, verify manually
+end
+
+
+
+
 
