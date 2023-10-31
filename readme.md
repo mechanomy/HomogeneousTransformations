@@ -14,6 +14,8 @@ H03 = H01 * H12 * H23
 ```
 See the in-source tests in [src/HMatrix.jl](src/HMatrix.jl) and [src/HomogeneousTransformations.jl](src/HomogeneousTransformations.jl).
 
+[Docs](https://mechanomy.github.io/HomogeneousTransformations.jl/dev/)
+
 ## Design
 This package is intentionally simple, focused only on providing functions for calculating transformations and not attempting to include many functions like [Rigid Body Dynamics](https://github.com/JuliaRobotics/RigidBodyDynamics.jl).
 

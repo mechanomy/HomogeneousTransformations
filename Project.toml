@@ -1,7 +1,7 @@
 name = "HomogeneousTransformations"
 uuid = "59ef864d-61ee-43f7-9b33-662866a07383"
 authors = ["Mechanomy LLC"]
-version = "1.0.0-rc"
+version = "1.0.0"
 
 [deps]
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
