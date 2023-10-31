@@ -20,8 +20,8 @@ makedocs(
   )
 
 # compile custom theme scss in to css, copying over the default themes
-DocumenterTools.Themes.compile("src/assets/themes/documenter-mechanomy.scss", "build/assets/themes/documenter-dark.css")
-DocumenterTools.Themes.compile("src/assets/themes/documenter-mechanomy.scss", "build/assets/themes/documenter-light.css")
+DocumenterTools.Themes.compile("docs/src/assets/themes/documenter-mechanomy.scss", "docs/build/assets/themes/documenter-dark.css")
+DocumenterTools.Themes.compile("docs/src/assets/themes/documenter-mechanomy.scss", "docs/build/assets/themes/documenter-light.css")
 
 deploydocs(
   root = joinpath(dirname(pathof(HomogeneousTransformations)), "..", "docs"),
