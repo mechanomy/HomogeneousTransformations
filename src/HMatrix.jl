@@ -4,16 +4,20 @@
 # * position = 1x3
 # * unit columns in rotation
 
+
 export HMatrix
 
 """
-  `HMatrix` wraps a SMatrix{4,4} to allow typed arguments
+  `HMatrix` wraps a SMatrix{4,4}, enforcing
+  * defined size of 4x4
+  * unit columns in rotation matrix [1:3,1:3]
+  * 0001 last row
+
   $TYPEDFIELDS
 """
 struct HMatrix
   data::MMatrix #need to specify type? ## that you should want to positively and negatively define everything..
 end
-# HMatrix(a::Matrix) = HMatrix(MMatrix{4,4}(a))
 function HMatrix(a::Matrix)
   @assert length(a) == 12 || length(a) == 16 "HMatrix requires 12 or 16 elements"
 
@@ -32,32 +36,43 @@ function HMatrix(a::Matrix)
 
   return HMatrix(mm)
 end
-
 @testitem "HMatrix construction" begin
-  #full 16 elements
-  hm = HMatrix([1 2 3 4; 5 6 7 8; 9 10 11 12; 13 14 15 16])
-  @test hm.data[1,1] ≈ 1/sqrt(1^2+5^2+9^2)
+  @testset "creation from 16 elements" begin
+    hm = HMatrix([1 2 3 4; 5 6 7 8; 9 10 11 12; 13 14 15 16])
+    @test hm.data[1,1] ≈ 1/sqrt(1^2+5^2+9^2)
+    @test hm.data[4,1] ≈ 0
+    
+    using LinearAlgebra # @testitems are separted from parent context..
+    @test norm(hm.data[1:3,1]) ≈ 1.0
 
-  # omit the last row 3x4 = 12 elements
-  hm = HMatrix([1 2 3 4; 5 6 7 8; 9 10 11 12])
-  @test hm.data[1,1] ≈ 1/sqrt(1^2+5^2+9^2)
+    hm = HMatrix([1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1])
+    @test hm.data[2,2] == 1
+  end
 
-  hm = HMatrix([1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1])
-  @test hm.data[2,2] == 1
+  @testset "creation with 12 elements" begin
+    hm = HMatrix([1 2 3 4; 5 6 7 8; 9 10 11 12])
+    @test hm.data[1,1] ≈ 1/sqrt(1^2+5^2+9^2)
 
-  @test_throws AssertionError HMatrix([1 2 3; 4 5 6])
-  
+    using LinearAlgebra # @testitems are separted from parent context..
+    @test norm(hm.data[1:3,1]) ≈ 1.0
+  end
 
-  using StaticArrays
-  a = 1
-  b = 1.2
-  hf = HMatrix( MMatrix{4,4,Float32,16}([1.2 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]) )
-  @test isa(hf, HMatrix)
-  @test hf.data[1,1] ≈ 1.2
-  @test isa(hf.data[1,1], Float32)
+  @testset "matrix size assertion" begin
+    @test_throws AssertionError HMatrix([1 2 3; 4 5 6]) 
+  end
 
-  hi = HMatrix( MMatrix{4,4,Int8,16}([1 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]) )
-  @test isa(hi.data[1,1], Int8)
+  @testset "creation from MMatrix" begin
+    using StaticArrays
+    a = 1
+    b = 1.2
+    hf = HMatrix( MMatrix{4,4,Float32,16}([1.2 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]) )
+    @test isa(hf, HMatrix)
+    @test hf.data[1,1] ≈ 1.2
+    @test isa(hf.data[1,1], Float32)
+
+    hi = HMatrix( MMatrix{4,4,Int8,16}([1 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]) )
+    @test isa(hi.data[1,1], Int8)
+  end
 end
 
 Base.convert(::Type{HMatrix}, sm::MMatrix{4,4}) = HMatrix(sm)
@@ -90,7 +105,6 @@ Base.length(hm::HMatrix) = length(hm.data)
   @test length(hf) == 16
 end
 
-# how can I enforce MMatrix's size?
 Base.isapprox(a::HMatrix, b::HMatrix; atol::Real=0, rtol::Real=atol) = isapprox(a.data, b.data, atol=atol, rtol=rtol)
 Base.isapprox(a::HMatrix, b::MMatrix; atol::Real=0, rtol::Real=atol) = isapprox(a.data, b, atol=atol, rtol=rtol)
 Base.isapprox(a::MMatrix, b::HMatrix; atol::Real=0, rtol::Real=atol) = isapprox(a, b.data, atol=atol, rtol=rtol)
@@ -110,13 +124,12 @@ Base.isapprox(a::MMatrix, b::HMatrix; atol::Real=0, rtol::Real=atol) = isapprox(
   @test d ≈ a
 end
 
-# Base.iterate(hm::HMatrix) = (hm.data[1],1)
 Base.iterate(hm::HMatrix, state=1) = state > length(hm) ? nothing : (hm.data[state],state+1)
 @testitem "scalar addition" begin 
   using StaticArrays
   hf = HMatrix( MMatrix{4,4}([1.0 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]) )
   @test_throws MethodError hf + 1 #need the broadcast .+
   a = hf .+ 1
-  # @test a[1,1] ≈ 2
+  @test a[1,1] ≈ 2
 end
 

@@ -5,16 +5,15 @@ module HomogeneousTransformations
   using StaticArrays
   using TestItems # https://github.com/julia-vscode/TestItemRunner.jl 
 
-  include("HMatrix.jl")
+  include("HMatrix.jl") # the core struct
 
   export Point
   export Rx, Ry, Rz, Rtk
   export Tx,Ty,Tz
   export Eye
 
-
   """
-  Create a rotation matrix of angle `a` about the X axis.
+  Create a rotation matrix of angle `a` about the X axis, in radians.
   """
   function Rx(a) #a => radian / degree?
     # return MMatrix{4,4}([1 0 0 0; 0 cos(a) -sin(a) 0; 0 sin(a) cos(a) 0; 0 0 0 1]) 
@@ -27,7 +26,7 @@ module HomogeneousTransformations
   end
 
   """
-  Create a rotation matrix of angle `b` about the Y axis.
+  Create a rotation matrix of angle `b` about the Y axis, in radians.
   """
   function Ry(b)
     return HMatrix([cos(b) 0 sin(b) 0; 0 1 0 0; -sin(b) 0 cos(b) 0; 0 0 0 1])
@@ -39,7 +38,7 @@ module HomogeneousTransformations
   end
 
   """
-  Create a rotation matrix of angle `c` about the Z axis.
+  Create a rotation matrix of angle `c` about the Z axis, in radians.
   """
   function Rz(c)
     return HMatrix([cos(c) -sin(c) 0 0; sin(c) cos(c) 0 0; 0 0 1 0; 0 0 0 1])
@@ -52,12 +51,12 @@ module HomogeneousTransformations
 
 
   """
-  Create a rotation of angle `th` about and aribrary axis `k`.
+  Create a rotation of angle `th`, in radians, about and aribrary axis `k`.
   """
   function Rtk(th, k)
-    return HMatrix([ k[1]^2*(1-cos(th)) + cos(th)       k[1]*k[2]*(1-cos(th))-k[3]*sin(th) k[1]*k[3]*(1-cos(th))+k[2]*sin(th) 0;
-                          k[1]*k[2]*(1-cos(th))+k[3]*sin(th) k[2]^2*(1-cos(th))+cos(th)         k[2]*k[3]*(1-cos(th))-k[1]*sin(th) 0; 
-                          k[1]*k[3]*(1-cos(th))-k[2]*sin(th) k[2]*k[3]*(1-cos(th))+k[1]*sin(th) k[3]^2*(1-cos(th))+cos(th)         0; 0 0 0 1 ]) # Spong_eq2.43 as a 4x4
+    return HMatrix([k[1]^2*(1-cos(th)) + cos(th)       k[1]*k[2]*(1-cos(th))-k[3]*sin(th) k[1]*k[3]*(1-cos(th))+k[2]*sin(th) 0;
+                    k[1]*k[2]*(1-cos(th))+k[3]*sin(th) k[2]^2*(1-cos(th))+cos(th)         k[2]*k[3]*(1-cos(th))-k[1]*sin(th) 0; 
+                    k[1]*k[3]*(1-cos(th))-k[2]*sin(th) k[2]*k[3]*(1-cos(th))+k[1]*sin(th) k[3]^2*(1-cos(th))+cos(th)         0; 0 0 0 1 ]) # Spong_eq2.43 as a 4x4
   end
   @testitem "Rtk" begin
     # display(Rx(3).data)
@@ -137,8 +136,5 @@ module HomogeneousTransformations
   function Eye()
     return HMatrix([1.0 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0])
   end
-
-
-
 
 end
