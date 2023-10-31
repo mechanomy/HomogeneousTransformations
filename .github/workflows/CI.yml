@@ -21,6 +21,7 @@ jobs:
         version:
           - '1.9'
           - 'nightly'
+            allow_failure: true
         os:
           - ubuntu-latest
           - windows-latest
