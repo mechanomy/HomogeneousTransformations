@@ -20,17 +20,12 @@ jobs:
       matrix:
         version:
           - '1.9'
+          - '1.8'
         os:
           - ubuntu-latest
           - windows-latest
         arch:
           - x64
-        allow_failure: [false]
-        include:
-          - version: 'nightly'
-            os: ubuntu-latest
-            arch: x64
-            allow_failure: true
     steps:
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
