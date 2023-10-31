@@ -14,6 +14,13 @@ TestItems = "1c621080-faea-4a02-84b6-bbd5e436b8fe"
 
 [compat]
 julia = "1"
+DocStringExtensions = "0.9.3"
+StaticArrays = "1"
+TestItemRunner = "0.2.2"
+TestItems = "0.1.1"
+LinearAlgebra = "1"
+Printf = "1"
+Test = "1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
